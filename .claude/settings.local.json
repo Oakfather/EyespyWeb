@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:itch.io)",
+      "Bash(npm install:*)",
+      "Bash(cmd /c \"node --version 2>&1\")",
+      "Bash(cmd /c:*)",
+      "Bash(powershell:*)",
+      "Bash(powershell.exe -Command:*)"
+    ]
+  }
+}
