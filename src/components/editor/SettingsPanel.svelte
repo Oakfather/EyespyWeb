@@ -2,6 +2,7 @@
   import BackgroundSlot from './BackgroundSlot.svelte';
   import ForegroundSettings from './ForegroundSettings.svelte';
   import HiddenImageList from './HiddenImageList.svelte';
+  import DetectionSettings from './DetectionSettings.svelte';
 </script>
 
 <div class="settings-panel">
@@ -19,6 +20,10 @@
     <div class="divider"></div>
 
     <HiddenImageList />
+
+    <div class="divider"></div>
+
+    <DetectionSettings />
   </div>
 </div>
 

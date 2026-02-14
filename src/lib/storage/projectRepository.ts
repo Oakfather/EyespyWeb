@@ -1,5 +1,5 @@
 import { getDb } from './db';
-import { STORE_PROJECTS, DEFAULT_PROJECT_NAME, DEFAULT_FOREGROUND_TINT, DEFAULT_FOREGROUND_OPACITY, DEFAULT_REVEAL_THRESHOLD, DEFAULT_REVEAL_SIZE, DEFAULT_REVEAL_FALLOFF } from '../constants';
+import { STORE_PROJECTS, DEFAULT_PROJECT_NAME, DEFAULT_FOREGROUND_TINT, DEFAULT_FOREGROUND_OPACITY, DEFAULT_REVEAL_THRESHOLD, DEFAULT_REVEAL_SIZE, DEFAULT_REVEAL_FALLOFF, DEFAULT_DETECTION_MODE, DEFAULT_REVEAL_WINDOW } from '../constants';
 import { uid } from '../uid';
 import type { Project, Scene } from '../types';
 
@@ -31,6 +31,8 @@ export function createDefaultScene(name: string = 'New Scene'): Scene {
       falloff: DEFAULT_REVEAL_FALLOFF,
     },
     revealThreshold: DEFAULT_REVEAL_THRESHOLD,
+    detectionMode: DEFAULT_DETECTION_MODE as import('../types').DetectionMode,
+    revealWindow: DEFAULT_REVEAL_WINDOW,
   };
 }
 

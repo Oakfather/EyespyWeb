@@ -21,6 +21,8 @@ export interface CatalogueImage {
   thumbnailDataUrl: string;
 }
 
+export type DetectionMode = 'center' | 'revealFull';
+
 export interface Scene {
   id: string;
   name: string;
@@ -31,6 +33,8 @@ export interface Scene {
   hiddenEntries: HiddenImageEntry[];
   revealShape: RevealShapeConfig;
   revealThreshold: number;
+  detectionMode: DetectionMode;
+  revealWindow: number; // seconds, used by revealFull mode
 }
 
 export interface HiddenImageEntry {

@@ -1,6 +1,7 @@
 export class InputHandler {
-  position = $state({ x: 0, y: 0 });
-  isActive = $state(false);
+  x = 0;
+  y = 0;
+  isActive = false;
 
   private canvas: HTMLCanvasElement | null = null;
   private abortController: AbortController | null = null;
@@ -29,8 +30,8 @@ export class InputHandler {
   private handleMouse = (e: MouseEvent): void => {
     if (!this.canvas) return;
     const rect = this.canvas.getBoundingClientRect();
-    this.position.x = e.clientX - rect.left;
-    this.position.y = e.clientY - rect.top;
+    this.x = e.clientX - rect.left;
+    this.y = e.clientY - rect.top;
     this.isActive = true;
   };
 
@@ -39,8 +40,8 @@ export class InputHandler {
     if (!this.canvas || !e.touches.length) return;
     const rect = this.canvas.getBoundingClientRect();
     const touch = e.touches[0];
-    this.position.x = touch.clientX - rect.left;
-    this.position.y = touch.clientY - rect.top;
+    this.x = touch.clientX - rect.left;
+    this.y = touch.clientY - rect.top;
     this.isActive = true;
   };
 }

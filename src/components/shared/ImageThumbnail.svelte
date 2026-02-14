@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { CatalogueImage } from '$lib/types';
 
-  let { image, size = 56 }: { image: CatalogueImage; size?: number } = $props();
+  let { image, size = 56, onclick, isInScene = false }: { image: CatalogueImage; size?: number; onclick?: () => void; isInScene?: boolean } = $props();
 
   function handleDragStart(e: DragEvent) {
     e.dataTransfer?.setData('text/plain', image.id);
@@ -11,9 +11,11 @@
 
 <div
   class="thumbnail"
+  class:in-scene={isInScene}
   draggable="true"
   ondragstart={handleDragStart}
-  title={image.name}
+  onclick={onclick}
+  title={isInScene ? `${image.name} (double-click to remove)` : `${image.name} (double-click to add)`}
   style="width: {size}px"
 >
   <div class="thumb-img" style="height: {size}px">
@@ -36,6 +38,11 @@
 
   .thumbnail:hover {
     border-color: var(--accent);
+  }
+
+  .thumbnail.in-scene {
+    border-color: var(--accent);
+    background: rgba(124, 111, 245, 0.15);
   }
 
   .thumbnail:active {

@@ -1,16 +1,12 @@
 <script lang="ts">
   import type { HiddenImageEntry } from '$lib/types';
   import { findCatalogueImage } from '$lib/stores/projectStore.svelte';
-  import { removeHiddenEntry, updateHiddenEntry } from '$lib/stores/editorStore.svelte';
+  import { updateHiddenEntry } from '$lib/stores/editorStore.svelte';
 
   let { entry }: { entry: HiddenImageEntry } = $props();
 
   const image = $derived(findCatalogueImage(entry.catalogueImageId));
   let expanded = $state(false);
-
-  function handleRemove() {
-    removeHiddenEntry(entry.id);
-  }
 
   function setMinScale(e: Event) {
     const val = parseFloat((e.target as HTMLInputElement).value);
@@ -39,7 +35,6 @@
     {:else}
       <span class="entry-name missing">Missing image</span>
     {/if}
-    <button class="remove-btn" onclick={handleRemove} title="Remove">&times;</button>
   </div>
 
   {#if expanded}
@@ -124,22 +119,6 @@
   .entry-name.missing {
     color: var(--danger);
     font-style: italic;
-  }
-
-  .remove-btn {
-    font-size: 16px;
-    color: var(--text-secondary);
-    padding: 0 4px;
-    opacity: 0;
-    transition: opacity 0.1s;
-  }
-
-  .entry-row:hover .remove-btn {
-    opacity: 1;
-  }
-
-  .remove-btn:hover {
-    color: var(--danger);
   }
 
   .entry-details {

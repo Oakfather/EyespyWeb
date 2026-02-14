@@ -1,14 +1,31 @@
 <script lang="ts">
   import { getProject, addScene } from '$lib/stores/projectStore.svelte';
   import { navigate } from '$lib/router.svelte';
+  import { importScene } from '$lib/packaging/importer';
   import SceneCard from './SceneCard.svelte';
   import NewSceneButton from './NewSceneButton.svelte';
 
   const project = getProject();
+  let fileInput: HTMLInputElement;
+  let importing = $state(false);
 
   function handleNewScene() {
     const scene = addScene();
     navigate('editor', scene.id);
+  }
+
+  async function handleImport(e: Event) {
+    const input = e.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    importing = true;
+    try {
+      const scene = await importScene(input.files[0]);
+      navigate('editor', scene.id);
+    } catch (err) {
+      alert(`Import failed: ${(err as Error).message}`);
+    }
+    importing = false;
+    input.value = '';
   }
 </script>
 
@@ -16,6 +33,20 @@
   <header class="home-header">
     <h1 class="home-title">EyeSpy</h1>
     <p class="home-subtitle">{project?.name ?? 'Project'}</p>
+    <button
+      class="import-btn"
+      onclick={() => fileInput.click()}
+      disabled={importing}
+    >
+      {importing ? 'Importing...' : 'Import Scene (.eyespy.zip)'}
+    </button>
+    <input
+      bind:this={fileInput}
+      type="file"
+      accept=".zip"
+      onchange={handleImport}
+      style="display:none"
+    />
   </header>
 
   <div class="scenes-grid">
@@ -51,6 +82,27 @@
   .home-subtitle {
     color: var(--text-secondary);
     margin-top: 4px;
+  }
+
+  .import-btn {
+    margin-top: 12px;
+    padding: 6px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    background: var(--surface-bg);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .import-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .import-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .scenes-grid {

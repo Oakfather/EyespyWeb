@@ -1,7 +1,7 @@
 import { getScene, updateScene, saveCurrentProject, findCatalogueImage } from './projectStore.svelte';
 import { uid } from '../uid';
 import { AUTOSAVE_DEBOUNCE_MS } from '../constants';
-import type { Scene, HiddenImageEntry } from '../types';
+import type { Scene, HiddenImageEntry, DetectionMode } from '../types';
 
 let currentSceneId = $state<string | null>(null);
 
@@ -60,6 +60,22 @@ export function setForegroundImage(catalogueImageId: string | null): void {
   const scene = getCurrentScene();
   if (scene) {
     scene.foregroundImageId = catalogueImageId;
+    scheduleSave();
+  }
+}
+
+export function setDetectionMode(mode: DetectionMode): void {
+  const scene = getCurrentScene();
+  if (scene) {
+    scene.detectionMode = mode;
+    scheduleSave();
+  }
+}
+
+export function setRevealWindow(seconds: number): void {
+  const scene = getCurrentScene();
+  if (scene) {
+    scene.revealWindow = seconds;
     scheduleSave();
   }
 }

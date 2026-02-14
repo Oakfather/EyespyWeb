@@ -1,9 +1,11 @@
 <script lang="ts">
   import { navigate } from '$lib/router.svelte';
   import { getCurrentScene, setSceneName, flushSave } from '$lib/stores/editorStore.svelte';
+  import { exportScene } from '$lib/packaging/exporter';
 
   let { sceneId }: { sceneId: string } = $props();
   const scene = $derived(getCurrentScene());
+  let exporting = $state(false);
 
   function handleBack() {
     flushSave();
@@ -36,6 +38,24 @@
       onblur={handleNameChange}
     />
   {/if}
+
+  <button
+    class="topbar-btn"
+    onclick={async () => {
+      if (!scene || exporting) return;
+      exporting = true;
+      try {
+        flushSave();
+        await exportScene(scene);
+      } catch (e) {
+        alert((e as Error).message);
+      }
+      exporting = false;
+    }}
+    disabled={exporting}
+  >
+    {exporting ? 'Exporting...' : 'Export'}
+  </button>
 
   <button class="topbar-btn play-btn" onclick={handlePlay}>
     &#9654; Play

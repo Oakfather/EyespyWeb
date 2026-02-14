@@ -23,6 +23,7 @@ export interface RenderState {
   revealActive: boolean;
   canvasWidth: number;
   canvasHeight: number;
+  allFound: boolean;
 }
 
 // Cached offscreen canvases
@@ -75,8 +76,9 @@ export function renderFrame(
   // --- Layer 3: Obscuring layer (offscreen B) ---
   ctxB.clearRect(0, 0, w, h);
 
-  // 3a: Tint fill
-  ctxB.globalAlpha = state.foregroundTintOpacity;
+  // 3a: Tint fill (0 opacity when all found)
+  const tintOpacity = state.allFound ? 0 : state.foregroundTintOpacity;
+  ctxB.globalAlpha = tintOpacity;
   ctxB.fillStyle = state.foregroundTint;
   ctxB.fillRect(0, 0, w, h);
   ctxB.globalAlpha = 1;
@@ -88,12 +90,29 @@ export function renderFrame(
   }
 
   // --- Layer 4: Punch holes ---
-  // Found images get permanent holes
+  // Found images get permanent smooth elliptical holes
   for (const img of state.hiddenImages) {
     if (img.found) {
       ctxB.globalCompositeOperation = 'destination-out';
-      ctxB.fillStyle = 'rgba(0,0,0,1)';
-      ctxB.fillRect(img.x, img.y, img.width, img.height);
+      const cx = img.x + img.width / 2;
+      const cy = img.y + img.height / 2;
+      // Elliptical radius with padding for soft edge
+      const rx = img.width / 2 + 15;
+      const ry = img.height / 2 + 15;
+      const r = Math.max(rx, ry);
+
+      ctxB.save();
+      ctxB.translate(cx, cy);
+      ctxB.scale(rx / r, ry / r);
+      const gradient = ctxB.createRadialGradient(0, 0, 0, 0, 0, r);
+      gradient.addColorStop(0, 'rgba(0,0,0,1)');
+      gradient.addColorStop(0.75, 'rgba(0,0,0,1)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      ctxB.fillStyle = gradient;
+      ctxB.beginPath();
+      ctxB.arc(0, 0, r, 0, Math.PI * 2);
+      ctxB.fill();
+      ctxB.restore();
     }
   }
 
