@@ -9,6 +9,7 @@ export interface PlacedImage {
   width: number;
   height: number;
   found: boolean;
+  foundTime?: number; // performance.now() timestamp when found
 }
 
 const MAX_ATTEMPTS = 100;

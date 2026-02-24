@@ -174,14 +174,22 @@
     const bgH = bgImage?.naturalHeight || 600;
     const bgFit = fitToViewport(displayWidth, displayHeight, bgW, bgH);
 
-    const hiddenRenders: PlacedImageRender[] = placedImages.map((p) => ({
-      image: loadedImages.get(p.blobKey)!,
-      x: p.x,
-      y: p.y,
-      width: p.width,
-      height: p.height,
-      found: p.found,
-    })).filter((p) => p.image);
+    const hiddenRenders: PlacedImageRender[] = placedImages.map((p) => {
+      const entry = scene.hiddenEntries.find((e) => e.id === p.entryId);
+      const vfx = entry?.vfxConfig ?? { growScale: 1.4, wiggleAngle: 12, duration: 700 };
+      return {
+        image: loadedImages.get(p.blobKey)!,
+        x: p.x,
+        y: p.y,
+        width: p.width,
+        height: p.height,
+        found: p.found,
+        foundTime: p.foundTime,
+        vfxGrowScale: vfx.growScale,
+        vfxWiggleAngle: vfx.wiggleAngle,
+        vfxDuration: vfx.duration,
+      };
+    }).filter((p) => p.image);
 
     const state: RenderState = {
       backgroundImage: bgImage,

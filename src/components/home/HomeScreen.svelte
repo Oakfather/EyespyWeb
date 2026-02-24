@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getProject, addScene } from '$lib/stores/projectStore.svelte';
+  import { getProject, addScene, removeScene } from '$lib/stores/projectStore.svelte';
   import { navigate } from '$lib/router.svelte';
   import { importScene } from '$lib/packaging/importer';
   import SceneCard from './SceneCard.svelte';
@@ -52,7 +52,12 @@
   <div class="scenes-grid">
     {#if project}
       {#each project.scenes as scene (scene.id)}
-        <SceneCard {scene} onclick={() => navigate('editor', scene.id)} />
+        <SceneCard
+          {scene}
+          onPlay={() => navigate('play', scene.id)}
+          onEdit={() => navigate('editor', scene.id)}
+          onDelete={() => { if (confirm(`Delete "${scene.name}"?`)) removeScene(scene.id); }}
+        />
       {/each}
     {/if}
     <NewSceneButton onclick={handleNewScene} />

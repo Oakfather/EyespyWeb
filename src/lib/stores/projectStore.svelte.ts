@@ -1,5 +1,6 @@
 import { loadProject, saveProject, createDefaultProject, createDefaultScene } from '../storage/projectRepository';
 import { saveImageBlob, deleteImageBlob } from '../storage/imageRepository';
+import { initExampleContent } from '../example/initExampleContent';
 import { generateThumbnail } from '../images/thumbnailGenerator';
 import { validateImageFile, findFolderById, findParentFolder } from '../utils';
 import { uid } from '../uid';
@@ -16,6 +17,7 @@ export async function loadOrCreateProject(): Promise<void> {
   let loaded = await loadProject();
   if (!loaded) {
     loaded = createDefaultProject();
+    await initExampleContent(loaded);
     await saveProject(loaded);
   }
   project = loaded;

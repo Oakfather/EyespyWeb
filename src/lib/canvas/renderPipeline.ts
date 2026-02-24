@@ -8,6 +8,10 @@ export interface PlacedImageRender {
   width: number;
   height: number;
   found: boolean;
+  foundTime?: number;       // performance.now() when found
+  vfxGrowScale: number;     // peak scale at animation midpoint
+  vfxWiggleAngle: number;   // max rotation in degrees
+  vfxDuration: number;      // animation duration ms
 }
 
 export interface RenderState {
@@ -68,9 +72,34 @@ export function renderFrame(
     ctxA.drawImage(state.backgroundImage, x, y, width, height);
   }
 
-  // Layer 2: Hidden images
+  // Layer 2: Hidden images (with found-animation VFX)
+  const now = performance.now();
   for (const img of state.hiddenImages) {
-    ctxA.drawImage(img.image, img.x, img.y, img.width, img.height);
+    const cx = img.x + img.width / 2;
+    const cy = img.y + img.height / 2;
+
+    // Compute grow+wiggle when animation is active
+    let growFactor = 1;
+    let wiggleRad = 0;
+    if (img.found && img.foundTime !== undefined) {
+      const elapsed = now - img.foundTime;
+      if (elapsed < img.vfxDuration) {
+        const t = elapsed / img.vfxDuration; // 0 → 1
+        growFactor = 1 + Math.sin(t * Math.PI) * (img.vfxGrowScale - 1);
+        wiggleRad = Math.sin(t * Math.PI * 4) * (img.vfxWiggleAngle * Math.PI / 180) * (1 - t);
+      }
+    }
+
+    if (growFactor !== 1 || wiggleRad !== 0) {
+      ctxA.save();
+      ctxA.translate(cx, cy);
+      ctxA.rotate(wiggleRad);
+      ctxA.scale(growFactor, growFactor);
+      ctxA.drawImage(img.image, -img.width / 2, -img.height / 2, img.width, img.height);
+      ctxA.restore();
+    } else {
+      ctxA.drawImage(img.image, img.x, img.y, img.width, img.height);
+    }
   }
 
   // --- Layer 3: Obscuring layer (offscreen B) ---

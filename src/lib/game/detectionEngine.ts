@@ -39,7 +39,7 @@ export function checkDetection(
     const imgCy = img.y + img.height / 2;
 
     if (mode === 'center') {
-      checkCenter(img, revealX, revealY, revealRadius, imgCx, imgCy, dt, newlyFound);
+      checkCenter(img, revealX, revealY, revealRadius, imgCx, imgCy, dt, now, newlyFound);
     } else {
       checkRevealFull(img, revealX, revealY, revealRadius, threshold, revealWindowSecs, now, newlyFound);
     }
@@ -58,6 +58,7 @@ function checkCenter(
   imgCx: number,
   imgCy: number,
   dt: number,
+  now: number,
   newlyFound: string[]
 ): void {
   const dist = Math.sqrt((revealX - imgCx) ** 2 + (revealY - imgCy) ** 2);
@@ -66,6 +67,7 @@ function checkCenter(
     const current = (dwellTimers.get(img.entryId) ?? 0) + dt * 1000;
     if (current >= DWELL_TIME_MS) {
       img.found = true;
+      img.foundTime = now;
       newlyFound.push(img.entryId);
       dwellTimers.delete(img.entryId);
     } else {
@@ -120,6 +122,7 @@ function checkRevealFull(
   const coverage = covMap.size / (GRID_RES * GRID_RES);
   if (coverage >= threshold) {
     img.found = true;
+    img.foundTime = now;
     newlyFound.push(img.entryId);
     coverageMaps.delete(img.entryId);
   }

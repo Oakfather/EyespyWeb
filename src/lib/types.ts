@@ -37,12 +37,19 @@ export interface Scene {
   revealWindow: number; // seconds, used by revealFull mode
 }
 
+export interface VfxConfig {
+  growScale: number;    // peak scale multiplier at animation midpoint, e.g. 1.4
+  wiggleAngle: number;  // max rotation in degrees during wiggle, e.g. 12
+  duration: number;     // total animation duration in ms, e.g. 700
+}
+
 export interface HiddenImageEntry {
   id: string;
   catalogueImageId: string;
   scaleRange: [number, number];
   allowedRegion: Rect | null;
   rotation: number;
+  vfxConfig: VfxConfig;
 }
 
 export interface RevealShapeConfig {

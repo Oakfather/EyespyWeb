@@ -89,6 +89,7 @@ export function addHiddenEntry(catalogueImageId: string): void {
     scaleRange: [0.8, 1.2],
     allowedRegion: null,
     rotation: 0,
+    vfxConfig: { growScale: 1.4, wiggleAngle: 12, duration: 700 },
   };
   scene.hiddenEntries.push(entry);
   scheduleSave();
