@@ -23,6 +23,23 @@ export function fitToViewport(
   return { x, y, width, height, scale };
 }
 
+/** Compute cover fit of an image within a canvas area (no black bars, may crop). */
+export function coverToViewport(
+  canvasWidth: number,
+  canvasHeight: number,
+  imageWidth: number,
+  imageHeight: number
+): FitResult {
+  const scaleX = canvasWidth / imageWidth;
+  const scaleY = canvasHeight / imageHeight;
+  const scale = Math.max(scaleX, scaleY);
+  const width = imageWidth * scale;
+  const height = imageHeight * scale;
+  const x = (canvasWidth - width) / 2;
+  const y = (canvasHeight - height) / 2;
+  return { x, y, width, height, scale };
+}
+
 /** Convert normalized (0-1) scene coordinates to canvas pixel coordinates. */
 export function sceneToCanvas(
   sceneX: number,

@@ -2,7 +2,7 @@
   import type { Scene } from '$lib/types';
   import { findCatalogueImage } from '$lib/stores/projectStore.svelte';
   import { imageCache } from '$lib/images/imageCache';
-  import { fitToViewport } from '$lib/canvas/canvasUtils';
+  import { coverToViewport } from '$lib/canvas/canvasUtils';
   import { renderFrame, type RenderState, type PlacedImageRender } from '$lib/canvas/renderPipeline';
   import { placeHiddenImages, type PlacedImage } from '$lib/game/placementEngine';
   import { checkDetection, resetDwellTimers } from '$lib/game/detectionEngine';
@@ -97,23 +97,13 @@
       }
     }
 
-    // Place hidden images
-    const bgW = bgImage?.naturalWidth || 800;
-    const bgH = bgImage?.naturalHeight || 600;
-    const fit = fitToViewport(displayWidth, displayHeight, bgW, bgH);
-
+    // Place hidden images within the full canvas bounds
     placedImages = placeHiddenImages(
       scene.hiddenEntries,
-      fit.width,
-      fit.height,
+      displayWidth,
+      displayHeight,
       findCatalogueImage
     );
-
-    // Offset placed images by the fit origin
-    for (const p of placedImages) {
-      p.x += fit.x;
-      p.y += fit.y;
-    }
 
     // Preload all hidden image HTMLImageElements
     for (const p of placedImages) {
@@ -172,7 +162,7 @@
 
     const bgW = bgImage?.naturalWidth || 800;
     const bgH = bgImage?.naturalHeight || 600;
-    const bgFit = fitToViewport(displayWidth, displayHeight, bgW, bgH);
+    const bgFit = coverToViewport(displayWidth, displayHeight, bgW, bgH);
 
     const hiddenRenders: PlacedImageRender[] = placedImages.map((p) => {
       const entry = scene.hiddenEntries.find((e) => e.id === p.entryId);
