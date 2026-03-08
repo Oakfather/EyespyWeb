@@ -7,6 +7,7 @@
   import HUD from './HUD.svelte';
   import GearMenu from './GearMenu.svelte';
   import LevelComplete from './LevelComplete.svelte';
+  import TutorialController from '$lib/tutorial/TutorialController.svelte';
 
   let { sceneId }: { sceneId: string } = $props();
 
@@ -126,6 +127,8 @@
         onHome={handleHome}
       />
     {/if}
+
+    <TutorialController screen="play" />
   {/if}
 </div>
 

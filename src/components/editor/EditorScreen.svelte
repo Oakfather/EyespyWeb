@@ -4,6 +4,7 @@
   import CataloguePanel from './CataloguePanel.svelte';
   import CanvasPanel from './CanvasPanel.svelte';
   import SettingsPanel from './SettingsPanel.svelte';
+  import TutorialController from '$lib/tutorial/TutorialController.svelte';
 
   let { sceneId }: { sceneId: string } = $props();
 
@@ -19,6 +20,7 @@
     <CanvasPanel />
     <SettingsPanel />
   </div>
+  <TutorialController screen="editor" />
 </div>
 
 <style>

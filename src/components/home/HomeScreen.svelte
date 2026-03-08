@@ -4,6 +4,7 @@
   import { importScene } from '$lib/packaging/importer';
   import SceneCard from './SceneCard.svelte';
   import NewSceneButton from './NewSceneButton.svelte';
+  import TutorialController from '$lib/tutorial/TutorialController.svelte';
 
   const project = getProject();
   let fileInput: HTMLInputElement;
@@ -63,6 +64,8 @@
     <NewSceneButton onclick={handleNewScene} />
   </div>
 </div>
+
+<TutorialController screen="home" />
 
 <style>
   .home {
